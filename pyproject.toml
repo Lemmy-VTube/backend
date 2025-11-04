@@ -17,6 +17,7 @@ dependencies = [
     "redis>=6.4.0",
     "pytest>=8.4.2",
     "aiomysql>=0.3.2",
+    "aiogram>=3.22.0",
 ]
 
 [tool.hatch.build.targets.sdist]
