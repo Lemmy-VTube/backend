@@ -1,0 +1,24 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+src/.env
+
+# Logs
+logs/
+*.log
+
+# ruff
+.ruff_cache/
+
+# Almebic
+alembic.ini
+
+# Database
+src/database/bot.db
