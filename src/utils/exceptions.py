@@ -35,8 +35,16 @@ def success_response(
     )
 
 
+def unauthorized_error(details: str = "Unauthorized access") -> HTTPException:
+    return error_response_http(401, "Unauthorized", details)
+
+
 def forbidden_error(details: str = "Access denied") -> HTTPException:
     return error_response_http(403, "Forbidden", details)
+
+
+def forbidden_json_error(details: str = "Access denied") -> JSONResponse:
+    return error_response_json(403, "Forbidden", details)
 
 
 def too_many_requests_error(details: str = "Rate limit exceeded") -> JSONResponse:
