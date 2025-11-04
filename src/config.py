@@ -50,6 +50,8 @@ class Config(BaseSettings):
         ]
     )
 
+    ADMIN_IDS: list[int] = Field(default_factory=lambda: [8042671345])
+
     RATELIMIT_MAX_REQUESTS: int = 60
     RATELIMIT_WINDOW_SECONDS: int = 300
     RATELIMIT_BAN_SECONDS: int = 1800
