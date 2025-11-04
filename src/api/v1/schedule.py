@@ -41,6 +41,7 @@ async def create_schedule(user_data: UserDep, schedule_data: ScheduleCreate):
     user = await check_user(user_data.user.id if user_data.user else 100000)
     if user and user.role != UserRole.admin:
         return forbidden_json_error(details="You do not have permission to create schedules.")
+    
     schedule = await schedule_service.create_schedule(schedule_data)
     schema = ScheduleSchema.from_models(schedule)
     return success_response(
@@ -50,7 +51,7 @@ async def create_schedule(user_data: UserDep, schedule_data: ScheduleCreate):
 
 
 @router.put(
-    "/update",
+    "/update/{id}",
     summary="Update an existing schedule",
     description=(
         "Updates the data of an existing stream schedule entry. "
@@ -58,13 +59,41 @@ async def create_schedule(user_data: UserDep, schedule_data: ScheduleCreate):
     ),
     responses=custom_responses
 )
-async def update_schedule(user_data: UserDep, schedule_data: ScheduleUpdate):
+async def update_schedule(id: int, user_data: UserDep, schedule_data: ScheduleUpdate):
     user = await check_user(user_data.user.id if user_data.user else 100000)
     if user and user.role != UserRole.admin:
         return forbidden_json_error(details="You do not have permission to update schedules.")
-    schedule = await schedule_service.update_schedule(schedule_data)
+    
+    schedule = await schedule_service.update_schedule(id, schedule_data)
+    if not schedule:
+        return forbidden_json_error(details=f"Schedule with id {id} not found.")
+    
     schema = ScheduleSchema.from_models(schedule)
     return success_response(
         data={ "schedule": schema.model_dump(mode="json") if schema else None},
         message="Schedule successfully updated"
+    )
+
+
+@router.delete(
+    "/delete/{id}",
+    summary="Delete a schedule entry",
+    description=(
+        "Deletes a stream schedule entry by ID. "
+        "Only administrators are allowed to perform this action."
+    ),
+    responses=custom_responses
+)
+async def delete_schedule(id: int, user_data: UserDep):
+    user = await check_user(user_data.user.id if user_data.user else 100000)
+    if user and user.role != UserRole.admin:
+        return forbidden_json_error(details="You do not have permission to delete schedules.")
+    
+    deleted = await schedule_service.delete_schedule(id)
+    if not deleted:
+        return forbidden_json_error(details=f"Schedule with id {id} not found.")
+    
+    return success_response(
+        data={"deleted_id": id},
+        message=f"Schedule with id {id} successfully deleted"
     )

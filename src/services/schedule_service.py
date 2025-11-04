@@ -26,7 +26,7 @@ class ScheduleService:
         return schedule
 
     @staticmethod
-    async def update_schedule(schedule_data: ScheduleUpdate, id: int = 1) -> Schedule | None:
+    async def update_schedule(id: int, schedule_data: ScheduleUpdate) -> Schedule | None:
         logger.debug(f"Updating schedule with id: {id} and data: {schedule_data}")
         schedule = await ScheduleRepository.update_schedule(id, schedule_data)
         if schedule:
@@ -34,6 +34,16 @@ class ScheduleService:
         else:
             logger.warning(f"Schedule with id {id} not found for update")
         return schedule
+    
+    @staticmethod
+    async def delete_schedule(id: int) -> bool:
+        logger.debug(f"Attempting to delete schedule with id: {id}")
+        deleted = await ScheduleRepository.delete_schedule(id)
+        if deleted:
+            logger.debug(f"Successfully deleted schedule with id: {id}")
+        else:
+            logger.warning(f"Failed to delete schedule: schedule with id {id} not found")
+        return deleted
     
 
 

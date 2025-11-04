@@ -34,3 +34,12 @@ class ScheduleRepository:
             await session.commit()
             await session.refresh(schedule)
             return schedule
+        
+    @staticmethod
+    async def delete_schedule(id: int) -> bool:
+        async with async_session() as session:
+            if not (schedule := await session.scalar(select(Schedule).where(Schedule.id == id))):
+                return False
+            await session.delete(schedule)
+            await session.commit()
+            return True
