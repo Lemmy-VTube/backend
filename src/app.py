@@ -31,7 +31,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator:
 
 app = FastAPI(
     lifespan=lifespan,
-    docs_url="/swagger",
     version=config.PROJECT_VERSION,
     title=config.API_TITLE,
     description=config.API_DESCRIPTION,
