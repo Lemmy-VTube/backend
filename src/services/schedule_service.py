@@ -26,7 +26,7 @@ class ScheduleService:
         return schedule
 
     @staticmethod
-    async def update_schedule(id: int, schedule_data: ScheduleUpdate) -> Schedule | None:
+    async def update_schedule(schedule_data: ScheduleUpdate, id: int = 1) -> Schedule | None:
         logger.debug(f"Updating schedule with id: {id} and data: {schedule_data}")
         schedule = await ScheduleRepository.update_schedule(id, schedule_data)
         if schedule:

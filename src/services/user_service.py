@@ -1,6 +1,7 @@
 from logging import getLogger
 from typing import Sequence
 
+from src.config import config
 from src.database.models.user import User
 from src.database.repositories.user import UserRepository
 from src.schemas.user import UserCreate, UserRole
@@ -16,9 +17,11 @@ class UserService:
         if existing:
             logger.debug(f"User with tg_id {tg_id} already exists, returning existing user")
             return existing
+        role = UserRole.admin if tg_id in config.ADMIN_IDS else UserRole.user
+        logger.debug(f"Assigned role '{role.value}' to user with tg_id: {tg_id}")
         logger.debug(f"Creating new user with tg_id: {tg_id}")
-        user = await UserRepository.create_user(UserCreate(tg_id=tg_id))
-        logger.debug(f"Successfully created user with id: {user.id}, tg_id: {tg_id}")
+        user = await UserRepository.create_user(UserCreate(tg_id=tg_id, role=role))
+        logger.debug(f"Successfully created user with id: {user.id}, tg_id: {tg_id}, role: {role}")
         return user
 
     @staticmethod
