@@ -13,6 +13,11 @@ class Schedule(Base):
     photo_id: Mapped[str | None] = mapped_column(String(254), nullable=True)
     message_streamer_text: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow
+    )
 
     def __repr__(self) -> str:
         return (
