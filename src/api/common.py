@@ -24,7 +24,6 @@ async def get_api_info(request: Request) -> JSONResponse:
                     "developer": config.DEVELOPER_USERNAME,
                     "github": config.GITHUB_URL,
                     "docs": f"{request.base_url}docs",
-                    "swagger": f"{request.base_url}swagger",
                     "redoc": f"{request.base_url}redoc",
                     "api_url": str(request.base_url)
                 },
