@@ -11,12 +11,12 @@ dependencies = [
     "fastapi>=0.120.3",
     "uvicorn>=0.38.0",
     "pydantic-settings>=2.10.1",
-    "aiosqlite>=0.21.0",
     "sqlalchemy>=2.0.41",
     "alembic>=1.16.2",
     "ruff>=0.12.1",
     "redis>=6.4.0",
     "pytest>=8.4.2",
+    "aiomysql>=0.3.2",
 ]
 
 [tool.hatch.build.targets.sdist]
