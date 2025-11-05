@@ -26,6 +26,12 @@ class Config(BaseSettings):
     DB_URL: SecretStr
     RABBITMQ_URL: SecretStr
 
+    BACKEND_URL: SecretStr
+
+    TWITCH_CLIENT_ID: SecretStr
+    TWITCH_CLIENT_SECRET: SecretStr
+    TWITCH_WEBHOOK_SECRET: SecretStr
+
     APP_HOST: str = "127.0.0.1"
     APP_PORT: int = 8000
     APP_RELOAD: bool = False
@@ -56,6 +62,8 @@ class Config(BaseSettings):
     RATELIMIT_MAX_REQUESTS: int = 60
     RATELIMIT_WINDOW_SECONDS: int = 300
     RATELIMIT_BAN_SECONDS: int = 1800
+
+    STREAMER_USERNAME: str = "lemmychka"
 
     DEVELOPER_USERNAME: str = "Kitty_Ilnazik"
     GITHUB_URL: str = "https://github.com/Lemmy-VTube/backend"
