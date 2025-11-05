@@ -1,6 +1,8 @@
 from fastapi import APIRouter
 
-from src.api.v1 import admin, schedule, user
+from src.api.v1 import schedule
+from src.api.v1.admins import admin
+from src.api.v1.users import user
 
 
 def setup_api_v1() -> APIRouter:
