@@ -24,6 +24,7 @@ class Config(BaseSettings):
     
     REDIS_URL: SecretStr
     DB_URL: SecretStr
+    RABBITMQ_URL: SecretStr
 
     APP_HOST: str = "127.0.0.1"
     APP_PORT: int = 8000
