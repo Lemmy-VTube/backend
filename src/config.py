@@ -32,8 +32,8 @@ class Config(BaseSettings):
     TWITCH_CLIENT_SECRET: SecretStr
     TWITCH_WEBHOOK_SECRET: SecretStr
 
-    APP_HOST: str = "127.0.0.1"
-    APP_PORT: int = 8000
+    APP_HOST: str = "0.0.0.0"
+    APP_PORT: int = 8008
     APP_RELOAD: bool = False
 
     PROJECT_VERSION: str = "v2.0.1-beta"
