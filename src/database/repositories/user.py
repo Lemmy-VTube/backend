@@ -1,6 +1,6 @@
 from typing import Sequence
 
-from sqlalchemy import select
+from sqlalchemy import and_, select
 from sqlalchemy.exc import IntegrityError
 
 from src.database import async_session
@@ -13,6 +13,13 @@ async def _get_by_tg(session, tg_id: int) -> User | None:
 
 
 class UserRepository:
+    @staticmethod
+    async def get_admin_by_id(id: int) -> User | None:
+        async with async_session() as session:
+            return await session.scalar(
+                select(User).where(and_(User.id == id, User.role == UserRole.admin))
+            ) or None
+
     @staticmethod
     async def get_user_by_id(id: int) -> User | None:
         async with async_session() as session:
