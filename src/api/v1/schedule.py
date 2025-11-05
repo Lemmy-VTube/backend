@@ -22,7 +22,8 @@ router = APIRouter(prefix="/v1/schedule", tags=["v1 - schedule"])
         "Returns the current stream schedule with all available entries. "
         "Accessible to all users."
     ),
-    responses=custom_responses
+    responses=custom_responses,
+    response_model=ScheduleSchema
 )
 async def get_schedule():
     try:
@@ -43,7 +44,8 @@ async def get_schedule():
         "Creates a new stream schedule entry. "
         "Only administrators are allowed to perform this action."
     ),
-    responses=custom_responses
+    responses=custom_responses,
+    response_model=ScheduleSchema
 )
 async def create_schedule(user_data: UserDep, schedule_data: ScheduleCreate):
     try:
@@ -68,7 +70,8 @@ async def create_schedule(user_data: UserDep, schedule_data: ScheduleCreate):
         "Updates the data of an existing stream schedule entry. "
         "Only administrators are allowed to perform this action."
     ),
-    responses=custom_responses
+    responses=custom_responses,
+    response_model=ScheduleSchema
 )
 async def update_schedule(id: int, user_data: UserDep, schedule_data: ScheduleUpdate):
     try:

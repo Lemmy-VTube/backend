@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter
 
 from src.schemas.user import UserSchema, UserUpdate
@@ -13,7 +15,8 @@ router = APIRouter(prefix="/v1/users", tags=["v1 - users"])
     "/",
     summary="Get all users",
     description="Returns a paginated list of all users in the system.",
-    responses=custom_responses
+    responses=custom_responses,
+    response_model=List[UserSchema]
 )
 async def get_users(limit: int = 100, offset: int = 0):
     try:
@@ -36,7 +39,8 @@ async def get_users(limit: int = 100, offset: int = 0):
     "/get",
     summary="Get user by id",
     description="Returns a user by id.",
-    responses=custom_responses
+    responses=custom_responses,
+    response_model=UserSchema
 )
 async def get_user(id: int):
     try:    
@@ -57,7 +61,8 @@ async def get_user(id: int):
     "/get/me",
     summary="Get current user",
     description="Returns the current user.",
-    responses=custom_responses
+    responses=custom_responses,
+    response_model=UserSchema
 )
 async def get_me(user_data: UserDep):
     try:
@@ -78,7 +83,8 @@ async def get_me(user_data: UserDep):
     "/update/me",
     summary="Update current user",
     description="Updates the current user.",
-    responses=custom_responses
+    responses=custom_responses,
+    response_model=UserSchema
 )
 async def update_me(user_data: UserDep):
     try:

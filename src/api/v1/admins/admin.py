@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter
 
 from src.api.utils import check_user
@@ -19,7 +21,8 @@ router = APIRouter(prefix="/v1/admins", tags=["v1 - admins"])
     "/",
     summary="Get all admins",
     description="Returns a paginated list of all admins in the system.",
-    responses=custom_responses
+    responses=custom_responses,
+    response_model=List[UserSchema]
 )
 async def get_admins(limit: int = 100, offset: int = 0):
     try:
@@ -42,7 +45,8 @@ async def get_admins(limit: int = 100, offset: int = 0):
     "/get",
     summary="Get admin by id",
     description="Returns an admin by id.",
-    responses=custom_responses
+    responses=custom_responses,
+    response_model=UserSchema
 )
 async def get_admin(id: int):
     try:    
@@ -63,7 +67,8 @@ async def get_admin(id: int):
     "/make/admin",
     summary="Make user admin",
     description="Makes a user an admin.",
-    responses=custom_responses
+    responses=custom_responses,
+    response_model=UserSchema
 )
 async def make_admin_role(user_data: UserDep, tg_id: int):
     try:
@@ -88,7 +93,8 @@ async def make_admin_role(user_data: UserDep, tg_id: int):
     "/remove/admin",
     summary="Remove admin role from user",
     description="Removes the admin role from a user.",
-    responses=custom_responses
+    responses=custom_responses,
+    response_model=UserSchema
 )
 async def remove_admin_role(user_data: UserDep, tg_id: int):
     try:
