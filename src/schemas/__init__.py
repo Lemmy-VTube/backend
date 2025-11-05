@@ -1,5 +1,6 @@
+from src.schemas.roles import UserRole
 from src.schemas.schedule import ScheduleBase, ScheduleCreate, ScheduleRead, ScheduleUpdate
-from src.schemas.user import UserBase, UserCreate, UserRead, UserRole, UserUpdate
+from src.schemas.user import UserBase, UserCreate, UserRead, UserUpdate
 
 __all__ = [
     "UserBase",

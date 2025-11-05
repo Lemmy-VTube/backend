@@ -1,17 +1,28 @@
 from logging import getLogger
 from typing import Sequence
 
+from aiogram.utils.web_app import WebAppInitData
+
 from src.config import config
 from src.database.models.user import User
 from src.database.repositories.user import UserRepository
-from src.schemas.user import UserCreate, UserRole
+from src.schemas.user import UserCreate, UserRole, UserUpdate
 
 logger = getLogger(__name__)
 
 
 class UserService:
     @staticmethod
-    async def register_user(tg_id: int) -> User:
+    async def register_user(user_data: WebAppInitData) -> User | None:
+        if not user_data.user:
+            return None
+        
+        tg_id = user_data.user.id
+        username = user_data.user.username
+        first_name = user_data.user.first_name
+        last_name = user_data.user.last_name
+        photo_url = user_data.user.photo_url
+
         logger.debug(f"Attempting to register user with tg_id: {tg_id}")
         existing = await UserRepository.get_user(tg_id)
         if existing:
@@ -20,8 +31,27 @@ class UserService:
         role = UserRole.admin if tg_id in config.ADMIN_IDS else UserRole.user
         logger.debug(f"Assigned role '{role.value}' to user with tg_id: {tg_id}")
         logger.debug(f"Creating new user with tg_id: {tg_id}")
-        user = await UserRepository.create_user(UserCreate(tg_id=tg_id, role=role))
+        user = await UserRepository.create_user(
+            UserCreate(
+                tg_id=tg_id,
+                role=role,
+                username=username,
+                first_name=first_name,
+                last_name=last_name,
+                photo_url=photo_url
+            )
+        )
         logger.debug(f"Successfully created user with id: {user.id}, tg_id: {tg_id}, role: {role}")
+        return user
+    
+    @staticmethod
+    async def update_user(tg_id: int, data: UserUpdate) -> User | None:
+        logger.debug(f"Updating user {tg_id} with data: {data}")
+        user = await UserRepository.update_user(tg_id, data)
+        if user:
+            logger.debug(f"Successfully updated user {tg_id}")
+        else:
+            logger.warning(f"User {tg_id} not found for update")
         return user
     
     @staticmethod

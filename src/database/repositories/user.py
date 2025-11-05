@@ -5,7 +5,7 @@ from sqlalchemy.exc import IntegrityError
 
 from src.database import async_session
 from src.database.models.user import User
-from src.schemas.user import UserCreate, UserRole
+from src.schemas.user import UserCreate, UserRole, UserUpdate
 
 
 async def _get_by_tg(session, tg_id: int) -> User | None:
@@ -40,6 +40,20 @@ class UserRepository:
             except IntegrityError:
                 await session.rollback()
                 raise
+
+    @staticmethod
+    async def update_user(tg_id: int, data: UserUpdate) -> User | None:
+        async with async_session() as session:
+            if not (user := await _get_by_tg(session, tg_id)):
+                return None
+
+            update_data = data.model_dump(exclude_unset=True)
+            for key, value in update_data.items():
+                setattr(user, key, value)
+
+            await session.commit()
+            await session.refresh(user)
+            return user
 
     @staticmethod
     async def set_privacy_policy(tg_id: int, accepted: bool) -> User | None:

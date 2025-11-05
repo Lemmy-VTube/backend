@@ -1,16 +1,14 @@
-from datetime import datetime
-from enum import Enum
-from typing import Optional
+from __future__ import annotations
 
-from aiogram.utils.web_app import WebAppInitData
+from datetime import datetime
+from typing import TYPE_CHECKING, Optional
+
 from pydantic import BaseModel, Field
 
-from src.database.models.user import User
+from src.schemas.roles import UserRole
 
-
-class UserRole(str, Enum):
-    user = "user"
-    admin = "admin"
+if TYPE_CHECKING:
+    from src.database.models.user import User
 
 
 class UserBase(BaseModel):
@@ -21,6 +19,10 @@ class UserBase(BaseModel):
         default=False,
         description="Has the user accepted the privacy policy"
     )
+    username: str | None = Field(None, description="Telegram username of the user (without @)")
+    first_name: str = Field(..., description="First name of the user in Telegram")
+    last_name: str | None = Field(None, description="Last name of the user in Telegram")
+    photo_url: str | None = Field(None, description="URL of the user's Telegram profile photo")
 
 
 class UserCreate(UserBase):
@@ -29,21 +31,14 @@ class UserCreate(UserBase):
 
 class UserUpdate(BaseModel):
     role: UserRole | None = None
-    accepted_privacy_policy: bool | None = None
+    username: str | None = None
+    first_name: str | None = None
+    last_name: str | None = None
+    photo_url: str | None = None
 
 
-class UserRead(BaseModel):
+class UserRead(UserBase):
     id: int
-    role: UserRole = Field(default=UserRole.user, description="User role in the system")
-    username: str | None = Field(None, description="Telegram username of the user (without @)")
-    first_name: str = Field(..., description="First name of the user in Telegram")
-    last_name: str | None = Field(None, description="Last name of the user in Telegram")
-    photo_url: str | None = Field(None, description="URL of the user's Telegram profile photo")
-    is_new: bool = Field(..., description="Whether the user is new or returning")
-    accepted_privacy_policy: bool = Field(
-        ...,
-        description="Whether the user accepted the privacy policy"
-    )
     created_at: datetime
     updated_at: datetime
 
@@ -56,22 +51,19 @@ class UserRead(BaseModel):
 
 class UserSchema(UserRead):
     @classmethod
-    def from_models(
-        cls,
-        user_data: WebAppInitData,
-        user: Optional[User]
-    ) -> Optional["UserSchema"]:
+    def from_models(cls, user: Optional[User]) -> Optional["UserSchema"]:
         if user is None:
             return None
         return cls(
             id=user.id,
+            tg_id=user.tg_id,
             role=user.role,
-            username=user_data.user.username if user_data.user else None,
-            first_name=user_data.user.first_name if user_data.user else "Unknown",
-            last_name=user_data.user.last_name if user_data.user else None,
-            photo_url=user_data.user.photo_url if user_data.user else None,
             is_new=user.is_new,
             accepted_privacy_policy=user.accepted_privacy_policy,
+            username=user.username,
+            first_name=user.first_name,
+            last_name=user.last_name,
+            photo_url=user.photo_url,
             created_at=user.created_at,
             updated_at=user.updated_at
         )
