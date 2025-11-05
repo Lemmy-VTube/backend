@@ -14,6 +14,11 @@ async def _get_by_tg(session, tg_id: int) -> User | None:
 
 class UserRepository:
     @staticmethod
+    async def get_user_by_id(id: int) -> User | None:
+        async with async_session() as session:
+            return await session.scalar(select(User).where(User.id == id)) or None
+
+    @staticmethod
     async def get_user(tg_id: int) -> User | None:
         async with async_session() as session:
             return await _get_by_tg(session, tg_id)

@@ -47,5 +47,13 @@ def forbidden_json_error(details: str = "Access denied") -> JSONResponse:
     return error_response_json(403, "Forbidden", details)
 
 
+def not_found_error(details: str = "Resource not found") -> HTTPException:
+    return error_response_http(404, "Not Found", details)
+
+
+def not_found_json_error(details: str = "Resource not found") -> JSONResponse:
+    return error_response_json(404, "Not Found", details)
+
+
 def too_many_requests_error(details: str = "Rate limit exceeded") -> JSONResponse:
     return error_response_json(429, "Too Many Requests", details)

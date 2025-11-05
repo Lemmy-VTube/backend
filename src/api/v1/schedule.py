@@ -5,7 +5,7 @@ from src.schemas.schedule import ScheduleCreate, ScheduleSchema, ScheduleUpdate
 from src.schemas.user import UserRole
 from src.services.schedule_service import schedule_service
 from src.utils.dependencies import UserDep
-from src.utils.exceptions import forbidden_json_error, success_response
+from src.utils.exceptions import forbidden_json_error, not_found_json_error, success_response
 from src.utils.responses import custom_responses
 
 router = APIRouter(prefix="/v1/schedule", tags=["v1 - schedule"])
@@ -66,7 +66,7 @@ async def update_schedule(id: int, user_data: UserDep, schedule_data: ScheduleUp
     
     schedule = await schedule_service.update_schedule(id, schedule_data)
     if not schedule:
-        return forbidden_json_error(details=f"Schedule with id {id} not found.")
+        return not_found_json_error(details=f"Schedule with id {id} not found.")
     
     schema = ScheduleSchema.from_models(schedule)
     return success_response(
@@ -91,7 +91,7 @@ async def delete_schedule(id: int, user_data: UserDep):
     
     deleted = await schedule_service.delete_schedule(id)
     if not deleted:
-        return forbidden_json_error(details=f"Schedule with id {id} not found.")
+        return not_found_json_error(details=f"Schedule with id {id} not found.")
     
     return success_response(
         data={"deleted_id": id},

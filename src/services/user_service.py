@@ -125,6 +125,16 @@ class UserService:
         return user
 
     @staticmethod
+    async def get_user_by_id(id: int) -> User | None:
+        logger.debug(f"Getting user with id: {id}")
+        user = await UserRepository.get_user_by_id(id)
+        if user:
+            logger.debug(f"Found user with id: {id}, role: {user.role}")
+        else:
+            logger.debug(f"User with id {id} not found")
+        return user
+
+    @staticmethod
     async def get_all_users(limit: int = 100, offset: int = 0) -> Sequence[User]:
         logger.debug("Getting all users")
         users = await UserRepository.get_users(limit, offset)
