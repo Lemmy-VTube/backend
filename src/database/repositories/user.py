@@ -42,6 +42,26 @@ class UserRepository:
                 raise
 
     @staticmethod
+    async def set_privacy_policy(tg_id: int, accepted: bool) -> User | None:
+        async with async_session() as session:
+            if not (user := await _get_by_tg(session, tg_id)):
+                return None
+            user.accepted_privacy_policy = accepted
+            await session.commit()
+            await session.refresh(user)
+            return user
+        
+    @staticmethod
+    async def set_not_new(tg_id: int) -> User | None:
+        async with async_session() as session:
+            if not (user := await _get_by_tg(session, tg_id)):
+                return None
+            user.is_new = False
+            await session.commit()
+            await session.refresh(user)
+            return user
+
+    @staticmethod
     async def delete_user(tg_id: int) -> bool:
         async with async_session() as session:
             if not (user := await _get_by_tg(session, tg_id)):

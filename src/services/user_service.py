@@ -23,6 +23,36 @@ class UserService:
         user = await UserRepository.create_user(UserCreate(tg_id=tg_id, role=role))
         logger.debug(f"Successfully created user with id: {user.id}, tg_id: {tg_id}, role: {role}")
         return user
+    
+    @staticmethod
+    async def accept_privacy_policy(tg_id: int) -> User | None:
+        logger.debug(f"User {tg_id} attempts to accept privacy policy")
+        user = await UserRepository.set_privacy_policy(tg_id, True)
+        if user:
+            logger.debug(f"User {tg_id} accepted privacy policy")
+        else:
+            logger.warning(f"User {tg_id} not found when accepting privacy policy")
+        return user
+
+    @staticmethod
+    async def decline_privacy_policy(tg_id: int) -> User | None:
+        logger.debug(f"User {tg_id} attempts to decline privacy policy")
+        user = await UserRepository.set_privacy_policy(tg_id, False)
+        if user:
+            logger.debug(f"User {tg_id} declined privacy policy")
+        else:
+            logger.warning(f"User {tg_id} not found when declining privacy policy")
+        return user
+
+    @staticmethod
+    async def set_not_new(tg_id: int) -> User | None:
+        logger.debug(f"Setting user {tg_id} as not new (is_new=False)")
+        user = await UserRepository.set_not_new(tg_id)
+        if user:
+            logger.debug(f"User {tg_id} is now marked as not new")
+        else:
+            logger.warning(f"User {tg_id} not found when setting is_new=False")
+        return user
 
     @staticmethod
     async def delete_user(tg_id: int) -> bool:

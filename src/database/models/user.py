@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import BigInteger, DateTime
+from sqlalchemy import BigInteger, Boolean, DateTime
 from sqlalchemy import Enum as SAEnum
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -18,8 +18,17 @@ class User(Base):
         default=UserRole.user,
         nullable=False,
     )
+    is_new: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    accepted_privacy_policy: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
-    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow
+    )
 
     def __repr__(self) -> str:
-        return f"<User id={self.id} tg_id={self.tg_id} role={self.role}>"
+        return (
+            f"<User id={self.id} tg_id={self.tg_id} role={self.role} "
+            f"is_new={self.is_new} accepted_privacy_policy={self.accepted_privacy_policy}>"
+        )

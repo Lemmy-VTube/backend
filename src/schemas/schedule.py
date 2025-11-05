@@ -30,6 +30,7 @@ class ScheduleUpdate(ScheduleBase):
 
 
 class ScheduleRead(ScheduleBase):
+    id: int
     created_at: datetime
     updated_at: datetime
 
@@ -46,6 +47,7 @@ class ScheduleSchema(ScheduleRead):
         if schedule is None:
             return None
         return cls(
+            id=schedule.id,
             photo_id=schedule.photo_id or "",
             message_streamer_text=schedule.message_streamer_text or "",
             created_at=schedule.created_at,
