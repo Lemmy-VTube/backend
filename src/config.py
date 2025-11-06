@@ -75,7 +75,7 @@ class Config(BaseSettings):
 
 
 class ConfigLog(BaseSettings):
-    LOG_LEVEL: str = "DEBUG"
+    LOG_LEVEL: str = "INFO"
     LOG_FORMAT: str = "%(asctime)s - [%(levelname)s] - %(name)s: %(message)s"
     LOG_DATE_FORMAT: str = "%d.%m.%Y %H:%M:%S"
     LOG_FILE: Path = LOGS_DIR / f"app_{log_filename_time}.log"

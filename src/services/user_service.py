@@ -1,5 +1,5 @@
 from logging import getLogger
-from typing import Sequence
+from typing import Optional, Sequence
 
 from aiogram.utils.web_app import WebAppInitData
 
@@ -13,36 +13,56 @@ logger = getLogger(__name__)
 
 class UserService:
     @staticmethod
-    async def register_user(user_data: WebAppInitData) -> User | None:
-        if not user_data.user:
+    async def register_user(
+        user_tg_data: Optional[WebAppInitData] = None,
+        user_data: Optional[UserCreate] = None
+    ) -> Optional[User]:
+        if not user_tg_data and not user_data:
+            logger.warning("No user data provided to register_user")
             return None
-        
-        tg_id = user_data.user.id
-        username = user_data.user.username
-        first_name = user_data.user.first_name
-        last_name = user_data.user.last_name
-        photo_url = user_data.user.photo_url
+
+        if user_tg_data and user_tg_data.user:
+            tg_id = user_tg_data.user.id
+            username = user_tg_data.user.username
+            first_name = user_tg_data.user.first_name
+            last_name = user_tg_data.user.last_name
+            photo_url = user_tg_data.user.photo_url
+        elif user_data:
+            tg_id = user_data.tg_id
+            username = user_data.username
+            first_name = user_data.first_name
+            last_name = user_data.last_name
+            photo_url = user_data.photo_url
+        else:
+            logger.warning("WebAppInitData provided without user, and no UserCreate fallback")
+            return None
 
         logger.debug(f"Attempting to register user with tg_id: {tg_id}")
         existing = await UserRepository.get_user(tg_id)
         if existing:
             logger.debug(f"User with tg_id {tg_id} already exists, returning existing user")
             return existing
+
         role = UserRole.admin if tg_id in config.ADMIN_IDS else UserRole.user
         logger.debug(f"Assigned role '{role.value}' to user with tg_id: {tg_id}")
-        logger.debug(f"Creating new user with tg_id: {tg_id}")
-        user = await UserRepository.create_user(
-            UserCreate(
-                tg_id=tg_id,
-                role=role,
-                username=username,
-                first_name=first_name,
-                last_name=last_name,
-                photo_url=photo_url
+        try:
+            user = await UserRepository.create_user(
+                UserCreate(
+                    tg_id=tg_id,
+                    role=role,
+                    username=username,
+                    first_name=first_name,
+                    last_name=last_name,
+                    photo_url=photo_url
+                )
             )
-        )
-        logger.debug(f"Successfully created user with id: {user.id}, tg_id: {tg_id}, role: {role}")
-        return user
+            logger.debug(
+                f"Successfully created user with id: {user.id}, tg_id: {tg_id}, role: {role}"
+            )
+            return user
+        except Exception as e:
+            logger.error(f"Failed to create user with tg_id {tg_id}: {e}")
+            return None
     
     @staticmethod
     async def update_user(tg_id: int, data: UserUpdate) -> User | None:

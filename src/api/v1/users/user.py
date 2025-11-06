@@ -2,7 +2,7 @@ from typing import List
 
 from fastapi import APIRouter
 
-from src.schemas.user import UserSchema, UserUpdate
+from src.schemas.user import UserCreate, UserSchema, UserUpdate
 from src.services.user_service import user_service
 from src.utils.dependencies import UserDep
 from src.utils.exceptions import error_response_http, not_found_json_error, success_response
@@ -122,6 +122,30 @@ async def delete_me(user_data: UserDep):
     except Exception as e:
         raise error_response_http(500, "Internal Server Error", str(e))
 
+
+@router.post(
+    "/create",
+    summary="Create a new user",
+    description="Registers a new user in the system.",
+    responses=custom_responses,
+    response_model=UserSchema
+)
+async def create_user(user_data: UserCreate):
+    try:
+        if not user_data or not user_data.tg_id:
+            return not_found_json_error("tg_id is required to create a user")
+
+        user = await user_service.register_user(user_data=user_data)
+        if not user:
+            return not_found_json_error("Failed to create user")
+
+        schema = UserSchema.from_models(user)
+        return success_response(
+            data={"user": schema.model_dump(mode="json") if schema else None},
+            message="Successfully created user"
+        )
+    except Exception as e:
+        raise error_response_http(500, "Internal Server Error", str(e))
 
 @router.put(
     "/accept/privacy/policy",
