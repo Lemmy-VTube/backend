@@ -20,13 +20,13 @@ async def twitch_event(request: Request):
 
     # Twitch сначала отправляет challenge-запрос при регистрации webhook-а
     if "challenge" in data:
-        print("🔐 Проверка webhook-а от Twitch...")
+        logger.info("🔐 Проверка webhook-а от Twitch...")
         return Response(content=data["challenge"], media_type="text/plain")
 
     # Обрабатываем событие начала стрима
     if data.get("subscription", {}).get("type") == "stream.online":
         event = data["event"]
         user_id = event["broadcaster_user_id"]
-        print(f"🔴 {event['broadcaster_user_name']} начал стрим! (user_id: {user_id})")
+        logger.info(f"🔴 {event['broadcaster_user_name']} начал стрим! (user_id: {user_id})")
 
     return {"ok": True}
