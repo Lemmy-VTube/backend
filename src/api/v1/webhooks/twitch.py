@@ -14,7 +14,7 @@ router = RabbitRouter(
     tags=["v1 - webhooks - twitch"],
 )
 
-@router.post("/callback ")
+@router.post("/callback")
 async def twitch_event(request: Request):
     data = await request.json()
 
