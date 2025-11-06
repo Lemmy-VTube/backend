@@ -19,6 +19,7 @@ dependencies = [
     "aiomysql>=0.3.2",
     "aiogram>=3.22.0",
     "faststream[rabbit]>=0.6.3",
+    "twitchapi>=4.5.0",
 ]
 
 [tool.hatch.build.targets.sdist]
