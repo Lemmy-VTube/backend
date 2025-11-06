@@ -41,6 +41,8 @@ async def twitch_event(request: Request):
             {
                 "event": "stream_offline",
                 "user_name": user_name,
+                "title": None,
+                "game_name": None
             },
             queue="twitch_streams",
         )
