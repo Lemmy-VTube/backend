@@ -63,7 +63,7 @@ class Config(BaseSettings):
     RATELIMIT_WINDOW_SECONDS: int = 300
     RATELIMIT_BAN_SECONDS: int = 1800
 
-    STREAMER_USERNAME: str = "lemmychka"
+    STREAMER_USERNAME: str = "kitty_ilnazik"
 
     DEVELOPER_USERNAME: str = "Kitty_Ilnazik"
     GITHUB_URL: str = "https://github.com/Lemmy-VTube/backend"
