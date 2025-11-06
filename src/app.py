@@ -9,6 +9,7 @@ from src.api import setup_api_router
 from src.config import config
 from src.database import close_db, init_db
 from src.middlewares.rate_limit import RateLimitMiddleware
+from src.services.twitch_service import twitch_service
 
 logger = getLogger(__name__)
 
@@ -19,11 +20,15 @@ async def lifespan(app: FastAPI) -> AsyncGenerator:
     logger.debug("Initializing database...")
     await init_db()
     logger.debug("Database initialized successfully")
+    await twitch_service.startup()
+    logger.debug("TwitchService started successfully")
     logger.debug("Application started successfully")
     
     yield
 
-    logger.debug("Shutting down application...")    
+    logger.debug("Shutting down application...")
+    await twitch_service.shutdown()
+    logger.debug("TwitchService shutdown completed")
     logger.debug("Closing database connections...")
     await close_db()
     logger.debug("Database connections closed successfully")

@@ -63,7 +63,7 @@ class Config(BaseSettings):
     RATELIMIT_WINDOW_SECONDS: int = 300
     RATELIMIT_BAN_SECONDS: int = 1800
 
-    STREAMER_USERNAME: str = "kitty_ilnazik"
+    STREAMER_USERNAME: str = "lemmychka"
 
     DEVELOPER_USERNAME: str = "Kitty_Ilnazik"
     GITHUB_URL: str = "https://github.com/Lemmy-VTube/backend"
@@ -75,7 +75,7 @@ class Config(BaseSettings):
 
 
 class ConfigLog(BaseSettings):
-    LOG_LEVEL: str = "INFO"
+    LOG_LEVEL: str = "DEBUG"
     LOG_FORMAT: str = "%(asctime)s - [%(levelname)s] - %(name)s: %(message)s"
     LOG_DATE_FORMAT: str = "%d.%m.%Y %H:%M:%S"
     LOG_FILE: Path = LOGS_DIR / f"app_{log_filename_time}.log"
